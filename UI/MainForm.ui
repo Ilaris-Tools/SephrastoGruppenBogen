@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>823</width>
-    <height>548</height>
+    <width>860</width>
+    <height>606</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -48,24 +48,14 @@
                 <string>Allgemein</string>
                </property>
                <layout class="QFormLayout" name="formLayout">
-                <item row="0" column="0">
-                 <widget class="QCheckBox" name="cbWertlos">
-                  <property name="toolTip">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Bogen ohne Werte exportieren, um sie händisch eintragen zu können.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                  </property>
-                  <property name="text">
-                   <string>Werte ausblenden</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="0">
+                <item row="6" column="0">
                  <widget class="QLabel" name="label_2">
                   <property name="text">
                    <string>Charaktere pro Seite</string>
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="1">
+                <item row="6" column="1">
                  <widget class="QSpinBox" name="sbColumns">
                   <property name="minimum">
                    <number>1</number>
@@ -78,15 +68,35 @@
                   </property>
                  </widget>
                 </item>
-                <item row="6" column="0">
+                <item row="2" column="1">
+                 <widget class="QComboBox" name="cbHausregeln"/>
+                </item>
+                <item row="2" column="0">
                  <widget class="QLabel" name="label">
                   <property name="text">
                    <string>Hausregeln</string>
                   </property>
                  </widget>
                 </item>
-                <item row="6" column="1">
-                 <widget class="QComboBox" name="cbHausregeln"/>
+                <item row="7" column="0">
+                 <widget class="QCheckBox" name="cbWertlos">
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Bogen ohne Werte exportieren, um sie händisch eintragen zu können.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
+                  <property name="text">
+                   <string>Werte ausblenden</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_6">
+                  <property name="text">
+                   <string>Name</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QLineEdit" name="leName"/>
                 </item>
                </layout>
               </widget>

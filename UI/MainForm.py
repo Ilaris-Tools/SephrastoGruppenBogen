@@ -17,14 +17,14 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFormLayout,
     QFrame, QGroupBox, QHBoxLayout, QLabel,
-    QPushButton, QSizePolicy, QSpacerItem, QSpinBox,
-    QTabWidget, QVBoxLayout, QWidget)
+    QLineEdit, QPushButton, QSizePolicy, QSpacerItem,
+    QSpinBox, QTabWidget, QVBoxLayout, QWidget)
 
 class Ui_Form(object):
     def setupUi(self, Form):
         if not Form.objectName():
             Form.setObjectName(u"Form")
-        Form.resize(823, 548)
+        Form.resize(860, 606)
         self.horizontalLayout = QHBoxLayout(Form)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.frame = QFrame(Form)
@@ -49,15 +49,10 @@ class Ui_Form(object):
         self.groupBox.setObjectName(u"groupBox")
         self.formLayout = QFormLayout(self.groupBox)
         self.formLayout.setObjectName(u"formLayout")
-        self.cbWertlos = QCheckBox(self.groupBox)
-        self.cbWertlos.setObjectName(u"cbWertlos")
-
-        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.cbWertlos)
-
         self.label_2 = QLabel(self.groupBox)
         self.label_2.setObjectName(u"label_2")
 
-        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.label_2)
+        self.formLayout.setWidget(6, QFormLayout.LabelRole, self.label_2)
 
         self.sbColumns = QSpinBox(self.groupBox)
         self.sbColumns.setObjectName(u"sbColumns")
@@ -65,17 +60,32 @@ class Ui_Form(object):
         self.sbColumns.setMaximum(8)
         self.sbColumns.setValue(4)
 
-        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.sbColumns)
-
-        self.label = QLabel(self.groupBox)
-        self.label.setObjectName(u"label")
-
-        self.formLayout.setWidget(6, QFormLayout.LabelRole, self.label)
+        self.formLayout.setWidget(6, QFormLayout.FieldRole, self.sbColumns)
 
         self.cbHausregeln = QComboBox(self.groupBox)
         self.cbHausregeln.setObjectName(u"cbHausregeln")
 
-        self.formLayout.setWidget(6, QFormLayout.FieldRole, self.cbHausregeln)
+        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.cbHausregeln)
+
+        self.label = QLabel(self.groupBox)
+        self.label.setObjectName(u"label")
+
+        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.label)
+
+        self.cbWertlos = QCheckBox(self.groupBox)
+        self.cbWertlos.setObjectName(u"cbWertlos")
+
+        self.formLayout.setWidget(7, QFormLayout.LabelRole, self.cbWertlos)
+
+        self.label_6 = QLabel(self.groupBox)
+        self.label_6.setObjectName(u"label_6")
+
+        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.label_6)
+
+        self.leName = QLineEdit(self.groupBox)
+        self.leName.setObjectName(u"leName")
+
+        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.leName)
 
 
         self.verticalLayout_3.addWidget(self.groupBox)
@@ -277,12 +287,13 @@ class Ui_Form(object):
     def retranslateUi(self, Form):
         Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
         self.groupBox.setTitle(QCoreApplication.translate("Form", u"Allgemein", None))
+        self.label_2.setText(QCoreApplication.translate("Form", u"Charaktere pro Seite", None))
+        self.label.setText(QCoreApplication.translate("Form", u"Hausregeln", None))
 #if QT_CONFIG(tooltip)
         self.cbWertlos.setToolTip(QCoreApplication.translate("Form", u"<html><head/><body><p>Bogen ohne Werte exportieren, um sie h\u00e4ndisch eintragen zu k\u00f6nnen.</p></body></html>", None))
 #endif // QT_CONFIG(tooltip)
         self.cbWertlos.setText(QCoreApplication.translate("Form", u"Werte ausblenden", None))
-        self.label_2.setText(QCoreApplication.translate("Form", u"Charaktere pro Seite", None))
-        self.label.setText(QCoreApplication.translate("Form", u"Hausregeln", None))
+        self.label_6.setText(QCoreApplication.translate("Form", u"Name", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("Form", u"Anzeige", None))
         self.checkBox.setText(QCoreApplication.translate("Form", u"EP", None))
         self.cbBild.setText(QCoreApplication.translate("Form", u"Bild", None))

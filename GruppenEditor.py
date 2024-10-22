@@ -1,6 +1,7 @@
 from PySide6 import QtCore, QtWidgets, QtGui
 from PySide6.QtWidgets import QLabel as QL
 from QtUtils.ProgressDialogExt import ProgressDialogExt
+from Serialization import Serialization
 
 from EinstellungenWrapper import EinstellungenWrapper
 
@@ -8,6 +9,7 @@ from .UI.MainForm import Ui_Form as MainForm
 from .UI.CharakterTab import Ui_Form as CharakterTab
 import Charakter
 import Datenbank
+import json
 from Wolke import Wolke
 
 
@@ -16,13 +18,14 @@ class GruppenEditor(object):
 
     def __init__(self):
         """Automatically called when the Editor window is created."""
+        self.charaktere = []
+        self.tabs = []
+        self.savepath = None
         self.root = QtWidgets.QWidget()  # empty widget to be filled
         self.ui = MainForm()  # ui from qt designer
         self.ui.setupUi(self.root)  # setup generated from qt designer
         self.setupUi()  # our setup in this wrapper
         Wolke.DB = Datenbank.Datenbank()
-        self.charaktere = []
-        self.tabs = []
 
     def setupUi(self):
         """custom setup to add logic to ui, also called from init."""
@@ -39,7 +42,7 @@ class GruppenEditor(object):
                 self.ui.tabs.removeTab(idx)
         for idx, char in enumerate(self.charaktere):
             if renderChars:
-                self.renderChar(char) 
+                self.renderCharTab(char) 
             self.ui.tabs.insertTab(idx+1, char.tab.widget, char.name)
     
     def tabChanged(self, tabNumber):
@@ -59,11 +62,11 @@ class GruppenEditor(object):
         charTab.setupUi(charTab.widget)
         charTab.btnRemove.clicked.connect(self.removeCurrentChar)
         char.tab = charTab
-        self.renderChar(char)
+        self.renderCharTab(char)
         self.charaktere.append(char)
         self.updateUI()
 
-    def renderChar(self, char):
+    def renderCharTab(self, char):
         # char.tab.widget.gbAllgemein.setLayout(QtWidgets.QHBoxLayout())
         # char.tab.widget.gbAllgemein.layout().addWidget(QL(f"Name: {char.name}"))
         for group in ["Attributexxx", "Vorteile", "Fertigkeiten", "Zauber"]:
@@ -73,15 +76,9 @@ class GruppenEditor(object):
         # char.tab.gbAllgemein.addWidget(QL(f"Name: {char.name}"))
 
     def removeCurrentChar(self):
-        # print("Remove", idx)
         idx = self.ui.tabs.currentIndex()
         self.charaktere.pop(idx-1)
         self.updateUI()
-
-    def save(self):
-        """Called on save button click."""
-        print("Save")
-    
 
     def loadChar(self, path):
         # path = "/home/buki/cloud/fremd/dsa/helden/asdf_alrik.xml"
@@ -93,8 +90,7 @@ class GruppenEditor(object):
             dlg.show()
             dlg.setLabelText("Lade Datenbank")
             dlg.setValue(0, True)
-            self.savepath = path
-            storedHausregeln = Charakter.Char.hausregelnLesen(self.savepath)
+            storedHausregeln = Charakter.Char.hausregelnLesen(path)
             availableHausregeln = EinstellungenWrapper.getDatenbanken(Wolke.Settings["Pfad-Regeln"])
         
             dlg.setValue(10, True)
@@ -119,7 +115,8 @@ class GruppenEditor(object):
             dlg.setLabelText("Lade Charakter")
             dlg.setValue(40, True)
             Wolke.Char = Charakter.Char()
-            success, loadResult = Wolke.Char.loadFile(self.savepath)
+            Wolke.Char.savepath = path
+            success, loadResult = Wolke.Char.loadFile(path)
             # if loadResult[0] != Wolke.Char.LoadResultNone:
             #     messageBox = QtWidgets.QMessageBox()
             #     icon = { 1 : QtWidgets.QMessageBox.Information, 2 : QtWidgets.QMessageBox.Warning, 3 : QtWidgets.QMessageBox.Critical }
@@ -131,7 +128,7 @@ class GruppenEditor(object):
             #     messageBox.exec()
 
             if not success:
-                self.savepath = ""
+                Wolke.Char.savepath = ""
 
             dlg.setValue(70, True)   
 
@@ -154,4 +151,29 @@ class GruppenEditor(object):
                 messagebox.setIcon(QtWidgets.QMessageBox.Critical)  
                 messagebox.setStandardButtons(QtWidgets.QMessageBox.Ok)
                 messagebox.exec()
+
+    def save(self, saveAs=False):
+        """Called on save button click."""
+        if saveAs or not self.savepath:
+            fname, _ = QtWidgets.QFileDialog.getSaveFileName(
+                self.root, "Gruppe speichern", Wolke.Settings["Pfad-Chars"], 
+                "JSON Dateien (*.json);;Alle Dateien (*)")
+            if not fname:
+                return
+            # self.savepath = newPath  # change here or after serialization or success?
+        else:
+            fname = self.savepath
+        gruppe = {}
+        if not self.ui.leName.text():
+            QtWidgets.QMessageBox.warning(self.root, "Fehler", "Bitte Gruppenname eingeben.")
+            return
+        gruppe["name"] = self.ui.leName.text()
+        gruppe["charaktere"] = []
+        for char in self.charaktere:
+            ser = Serialization.getSerializer(".json", 'Charakter')
+            char.serialize(ser)
+            gruppe["charaktere"].append(ser.root["Charakter"])
+        print(fname)
+        with open(fname, "w") as f:
+            json.dump(gruppe, f, indent=4, ensure_ascii=False)
 
