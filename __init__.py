@@ -16,7 +16,8 @@ class Plugin:
         self.mainWindowButton.setObjectName("buttonPlugin")
         self.mainWindowButton.setToolTip("Gruppenbogen erstellen")
         self.mainWindowButton.setProperty("class", "icon")
-        self.mainWindowButton.setText("\uf6f0")  #  horse
+        # font awesome icons v4: https://fontawesome.com/v4/icons/
+        self.mainWindowButton.setText("\uf0c0")  #  horse
         self.mainWindowButton.clicked.connect(self.createGruppenEditor) 
         return [self.mainWindowButton]
 

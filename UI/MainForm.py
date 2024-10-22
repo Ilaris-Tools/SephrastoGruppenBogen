@@ -209,7 +209,8 @@ class Ui_Form(object):
 
         self.verticalLayout_2.addWidget(self.frame_3)
 
-        self.tabs.addTab(self.tabNeu, "")
+        icon = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ContactNew))
+        self.tabs.addTab(self.tabNeu, icon, "")
 
         self.verticalLayout.addWidget(self.tabs)
 
@@ -219,17 +220,42 @@ class Ui_Form(object):
         self.frame_2.setFrameShadow(QFrame.Shadow.Raised)
         self.horizontalLayout_2 = QHBoxLayout(self.frame_2)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.btnReloadAll = QPushButton(self.frame_2)
+        self.btnReloadAll.setObjectName(u"btnReloadAll")
+        icon1 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ViewRefresh))
+        self.btnReloadAll.setIcon(icon1)
+
+        self.horizontalLayout_2.addWidget(self.btnReloadAll)
+
+        self.btnRemoveCurrentChar = QPushButton(self.frame_2)
+        self.btnRemoveCurrentChar.setObjectName(u"btnRemoveCurrentChar")
+        icon2 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.EditDelete))
+        self.btnRemoveCurrentChar.setIcon(icon2)
+
+        self.horizontalLayout_2.addWidget(self.btnRemoveCurrentChar)
+
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_2.addItem(self.horizontalSpacer)
 
+        self.btnOpen = QPushButton(self.frame_2)
+        self.btnOpen.setObjectName(u"btnOpen")
+        icon3 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentOpen))
+        self.btnOpen.setIcon(icon3)
+
+        self.horizontalLayout_2.addWidget(self.btnOpen)
+
         self.btnSave = QPushButton(self.frame_2)
         self.btnSave.setObjectName(u"btnSave")
+        icon4 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentSave))
+        self.btnSave.setIcon(icon4)
 
         self.horizontalLayout_2.addWidget(self.btnSave)
 
         self.btnExport = QPushButton(self.frame_2)
         self.btnExport.setObjectName(u"btnExport")
+        icon5 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentPrint))
+        self.btnExport.setIcon(icon5)
 
         self.horizontalLayout_2.addWidget(self.btnExport)
 
@@ -282,7 +308,10 @@ class Ui_Form(object):
 
         self.tabs.setTabText(self.tabs.indexOf(self.tabGruppe), QCoreApplication.translate("Form", u"Gruppe", None))
         self.btnLoadChar.setText(QCoreApplication.translate("Form", u"Charakter laden", None))
-        self.tabs.setTabText(self.tabs.indexOf(self.tabNeu), QCoreApplication.translate("Form", u"Neuer Charakter", None))
+        self.tabs.setTabText(self.tabs.indexOf(self.tabNeu), QCoreApplication.translate("Form", u"Charakter hinzuf\u00fcgen", None))
+        self.btnReloadAll.setText(QCoreApplication.translate("Form", u"Alle aktualisieren", None))
+        self.btnRemoveCurrentChar.setText(QCoreApplication.translate("Form", u"Charakter entfernen", None))
+        self.btnOpen.setText(QCoreApplication.translate("Form", u"\u00d6ffnen", None))
         self.btnSave.setText(QCoreApplication.translate("Form", u"Speichern", None))
         self.btnExport.setText(QCoreApplication.translate("Form", u"Export", None))
     # retranslateUi

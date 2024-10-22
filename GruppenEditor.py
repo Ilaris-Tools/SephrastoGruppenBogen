@@ -1,9 +1,11 @@
 from PySide6 import QtCore, QtWidgets, QtGui
+from PySide6.QtWidgets import QLabel as QL
 from QtUtils.ProgressDialogExt import ProgressDialogExt
 
 from EinstellungenWrapper import EinstellungenWrapper
 
-from .UI import MainForm
+from .UI.MainForm import Ui_Form as MainForm
+from .UI.CharakterTab import Ui_Form as CharakterTab
 import Charakter
 import Datenbank
 from Wolke import Wolke
@@ -15,25 +17,74 @@ class GruppenEditor(object):
     def __init__(self):
         """Automatically called when the Editor window is created."""
         self.root = QtWidgets.QWidget()  # empty widget to be filled
-        self.ui = MainForm.Ui_Form()  # ui from qt designer
+        self.ui = MainForm()  # ui from qt designer
         self.ui.setupUi(self.root)  # setup generated from qt designer
         self.setupUi()  # our setup in this wrapper
         Wolke.DB = Datenbank.Datenbank()
+        self.charaktere = []
+        self.tabs = []
 
     def setupUi(self):
         """custom setup to add logic to ui, also called from init."""
         # add more setup here 
-        self.ui.btn_save.clicked.connect(self.save)
-        self.ui.pushButton.clicked.connect(self.loadChar)
+        self.ui.btnSave.clicked.connect(self.save)
+        self.ui.btnLoadChar.clicked.connect(self.addCharakterTab)
+        # self.ui.tabs.changeEvent = self.tabChanged
+        self.ui.tabs.tabBar().tabBarClicked.connect(self.tabChanged)
     
+    def updateUI(self, renderChars=False):
+        """Update the UI."""
+        for idx in reversed(range(self.ui.tabs.count()-1)):
+            if idx != 0:
+                self.ui.tabs.removeTab(idx)
+        for idx, char in enumerate(self.charaktere):
+            if renderChars:
+                self.renderChar(char) 
+            self.ui.tabs.insertTab(idx+1, char.tab.widget, char.name)
+    
+    def tabChanged(self, tabNumber):
+        """Called when tab is changed."""
+        if tabNumber == len(self.charaktere)+1:
+            self.addCharakterTab()
+    
+    def addCharakterTab(self):
+        filePath, _ = QtWidgets.QFileDialog.getOpenFileName(
+            self.root, "Charakter laden", Wolke.Settings["Pfad-Chars"], 
+            "XML Dateien (*.xml);;Alle Dateien (*)")
+        if not filePath:
+            return
+        char = self.loadChar(filePath)
+        charTab = CharakterTab()
+        charTab.widget = QtWidgets.QWidget()
+        charTab.setupUi(charTab.widget)
+        charTab.btnRemove.clicked.connect(self.removeCurrentChar)
+        char.tab = charTab
+        self.renderChar(char)
+        self.charaktere.append(char)
+        self.updateUI()
+
+    def renderChar(self, char):
+        # char.tab.widget.gbAllgemein.setLayout(QtWidgets.QHBoxLayout())
+        # char.tab.widget.gbAllgemein.layout().addWidget(QL(f"Name: {char.name}"))
+        for group in ["Attributexxx", "Vorteile", "Fertigkeiten", "Zauber"]:
+            gb = QtWidgets.QGroupBox()
+            gb.setTitle(group)
+            char.tab.widget.layout().addWidget(gb)
+        # char.tab.gbAllgemein.addWidget(QL(f"Name: {char.name}"))
+
+    def removeCurrentChar(self):
+        # print("Remove", idx)
+        idx = self.ui.tabs.currentIndex()
+        self.charaktere.pop(idx-1)
+        self.updateUI()
 
     def save(self):
         """Called on save button click."""
         print("Save")
     
 
-    def loadChar(self):
-        path = "/home/buki/cloud/fremd/dsa/helden/asdf_alrik.xml"
+    def loadChar(self, path):
+        # path = "/home/buki/cloud/fremd/dsa/helden/asdf_alrik.xml"
         # copied from CharakterEditor.py, remmoved plugin stuff (no need for read only yet)
         try:
             dlg = ProgressDialogExt(minimum = 0, maximum = 100)
@@ -69,15 +120,15 @@ class GruppenEditor(object):
             dlg.setValue(40, True)
             Wolke.Char = Charakter.Char()
             success, loadResult = Wolke.Char.loadFile(self.savepath)
-            if loadResult[0] != Wolke.Char.LoadResultNone:
-                messageBox = QtWidgets.QMessageBox()
-                icon = { 1 : QtWidgets.QMessageBox.Information, 2 : QtWidgets.QMessageBox.Warning, 3 : QtWidgets.QMessageBox.Critical }
-                messageBox.setIcon(icon[loadResult[0]])
-                messageBox.setWindowTitle(loadResult[1])
-                messageBox.setText(loadResult[2])
-                messageBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
-                messageBox.setEscapeButton(QtWidgets.QMessageBox.Close)  
-                messageBox.exec()
+            # if loadResult[0] != Wolke.Char.LoadResultNone:
+            #     messageBox = QtWidgets.QMessageBox()
+            #     icon = { 1 : QtWidgets.QMessageBox.Information, 2 : QtWidgets.QMessageBox.Warning, 3 : QtWidgets.QMessageBox.Critical }
+            #     messageBox.setIcon(icon[loadResult[0]])
+            #     messageBox.setWindowTitle(loadResult[1])
+            #     messageBox.setText(loadResult[2])
+            #     messageBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
+            #     messageBox.setEscapeButton(QtWidgets.QMessageBox.Close)  
+            #     messageBox.exec()
 
             if not success:
                 self.savepath = ""
@@ -91,6 +142,7 @@ class GruppenEditor(object):
         finally:
             dlg.hide()
             dlg.deleteLater()
+        return Wolke.Char
 
     def loadDB(self, hausregeln):
         # copied from CharakterEditor.py

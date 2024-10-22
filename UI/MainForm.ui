@@ -261,8 +261,11 @@
          </layout>
         </widget>
         <widget class="QWidget" name="tabNeu">
+         <attribute name="icon">
+          <iconset theme="QIcon::ThemeIcon::ContactNew"/>
+         </attribute>
          <attribute name="title">
-          <string>Neuer Charakter</string>
+          <string>Charakter hinzufügen</string>
          </attribute>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
@@ -335,6 +338,26 @@
         </property>
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
+          <widget class="QPushButton" name="btnReloadAll">
+           <property name="text">
+            <string>Alle aktualisieren</string>
+           </property>
+           <property name="icon">
+            <iconset theme="QIcon::ThemeIcon::ViewRefresh"/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnRemoveCurrentChar">
+           <property name="text">
+            <string>Charakter entfernen</string>
+           </property>
+           <property name="icon">
+            <iconset theme="QIcon::ThemeIcon::EditDelete"/>
+           </property>
+          </widget>
+         </item>
+         <item>
           <spacer name="horizontalSpacer">
            <property name="orientation">
             <enum>Qt::Orientation::Horizontal</enum>
@@ -348,9 +371,22 @@
           </spacer>
          </item>
          <item>
+          <widget class="QPushButton" name="btnOpen">
+           <property name="text">
+            <string>Öffnen</string>
+           </property>
+           <property name="icon">
+            <iconset theme="QIcon::ThemeIcon::DocumentOpen"/>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="btnSave">
            <property name="text">
             <string>Speichern</string>
+           </property>
+           <property name="icon">
+            <iconset theme="QIcon::ThemeIcon::DocumentSave"/>
            </property>
           </widget>
          </item>
@@ -358,6 +394,9 @@
           <widget class="QPushButton" name="btnExport">
            <property name="text">
             <string>Export</string>
+           </property>
+           <property name="icon">
+            <iconset theme="QIcon::ThemeIcon::DocumentPrint"/>
            </property>
           </widget>
          </item>
