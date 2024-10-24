@@ -173,6 +173,15 @@ class GruppenEditor(object):
             ser = Serialization.getSerializer(".json", 'Charakter')
             char.serialize(ser)
             gruppe["charaktere"].append(ser.root["Charakter"])
+            charDict = ser.root
+            print(ser.root)
+            dechar = Charakter.Char()
+            deser = Serialization.getDeserializer(".json", 'Charakter')
+            deser.initFromSerializer(ser)
+            dechar.deserialize(deser)
+            print(dechar)
+            print(dechar.name)
+            print(dechar.eigenheiten)
         print(fname)
         with open(fname, "w") as f:
             json.dump(gruppe, f, indent=4, ensure_ascii=False)
