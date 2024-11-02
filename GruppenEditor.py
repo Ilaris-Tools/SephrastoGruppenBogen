@@ -209,12 +209,24 @@ class GruppenEditor(object):
             "JSON Dateien (*.json);;Alle Dateien (*)")
         if not fname:
             return
+        self.savepath = fname
+        # loading bar dialog
+        dlg = ProgressDialogExt(minimum = 0, maximum = 100)
+        dlg.disableCancel()
+        dlg.setWindowTitle("Gruppe laden")    
+        dlg.show()
+        dlg.setLabelText("Lade Gruppendatei")
+        dlg.setValue(0, True)
         with open(fname, "r") as f:
             gruppe = json.load(f)
+        dlg.setValue(10, True)
         self.ui.leName.setText(gruppe["name"])
         # TODO: ask if unsaved changes.. clear or respawn GruppenEditor?
         self.charaktere = []  # make sure allfields are updated and title etc..
-        for charDict in gruppe["charaktere"]:
+        count = len(gruppe["charaktere"])
+        step = 80 // count
+        for charIdx, charDict in enumerate(gruppe["charaktere"]):
+            dlg.setLabelText(f"Lade Charakter {charIdx+1} von {count}")
             # preload hausregeln 
             storedHausregeln = gruppe.get("hausregeln", "Keine")
             availableHausregeln = EinstellungenWrapper.getDatenbanken(Wolke.Settings["Pfad-Regeln"])
@@ -249,7 +261,12 @@ class GruppenEditor(object):
             print(char.name)
             char.tab = self.charakterTab()
             self.charaktere.append(char)
+            dlg.setValue(10 + step * (charIdx + 1), True)
+        dlg.setLabelText("Starte Editor")
         self.updateUI(renderChars=True)
+        dlg.setValue(100, True)
+        dlg.hide()
+        dlg.deleteLater()
         
     def export(self):
         """Called on export button click."""
