@@ -1,0 +1,146 @@
+:root {	
+    --HB_Color_Background: #EEE5CE; /* Light parchment */
+	--HB_Color_Accent: #e6d0b2; /* Pastel green */
+	--HB_Color_HeaderUnderline: #C0AD6A; /* Gold */
+	--HB_Color_HorizontalRule: #9C2B1B; /* Maroon */
+	--HB_Color_HeaderText: #58180D; /* Dark Maroon */
+	--HB_Color_MonsterStatBackground: #F2E5B5; /* Light orange parchment */
+	--HB_Color_CaptionText: #766649; /* Brown */
+	--HB_Color_WatercolorStain: #BBAD82; /* Light brown */
+	--HB_Color_Footnotes: #C9AD6A; /* Gold */
+
+	/* Latex */
+	--LT_Dunkelrot: #450c15; /* titel */
+	--LT_Braun: #6f5843; /* Linien? */
+	--LT_DunkelBraun: #39220d;
+	--LT_Beige: #e7d1b3; /* Kastenhintergrund */
+	--LT_Orange: #c86400; /* = VTT */
+	--LT_Grau: #655743; /* = VTT */
+	--LT_Blau: #425a66; /* = VTT */
+	--LT_Lila: #8e5d6f; /* = VTT */
+
+}
+
+@page {
+    size: A4 landscape;
+    padding: 5mm;
+} 
+
+body {
+    font-family: Crimson, sans-serif;
+    font-size: 12pt;
+}
+
+#background
+{
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background-color: red;
+    background-image: url("{backgroundImg}");
+    background-size: cover;
+}
+#content
+{
+    position: fixed;
+    top: 5px;
+    right: 5px;
+    bottom: 5px;
+    left: 5px;
+    padding: 10mm;
+    /* background-color: white; */
+    overflow: hidden;
+}
+	
+
+h1 {
+    color: red;
+}
+.columns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5cm;
+}
+
+.column {
+    flex: 1;
+    margin: 0;
+    padding: 0;
+    min-width: 2cm;
+    max-width: 8cm;
+    list-style-type: none;
+}
+
+.row {
+    margin: 0;
+    padding: 0;
+}
+
+.charakter {
+    background-color: var(--HB_Color_Background);
+    position: relative;
+    padding: 8px;
+    padding-top: 6px;
+    margin-bottom: 0.325cm;
+    /* background: url(/assets/ilaris/kreaturentypen/tier.png) 0px 0px, linear-gradient(rgba(0,0,0,0) 64px, 65px, var(--IR_Beige)); */
+    background-size: 64px, auto;
+    background-repeat: no-repeat;
+    background-position-x: right;
+}
+
+.charakter h2 {
+    font-size: 0.62cm;
+    line-height: 1em;
+    margin: 0;
+    background-color: none;
+    color: var(--IR_Dunkelrot);
+}
+
+.character h2 + p {
+    font-size: 0.304cm;
+    margin-bottom: 0;
+    background-color: none;
+    padding-right: 64px;
+    display: table-cell;
+    vertical-align: middle;
+    height: 29px;
+    overflow:hidden;
+}
+
+
+.charakter hr {
+    visibility: visible;
+    height: 2px;
+    /* margin: 0.12cm -8px; */
+    background-color: var(--IR_Dunkelrot);
+    color: var(--IR_Dunkelrot);
+    border-width: 2mm;
+}
+
+
+.charakter table {
+    margin: 0;
+    column-span: none;
+    background-color: transparent;
+    border-style: none;
+    border-image: none;
+    -webkit-column-span: none;
+
+    tr:nth-child(odd) {
+        background-color: transparent;
+    }
+
+    td,
+    th {
+        padding: 0px;
+    }
+}
+.charakter:first-child {
+    background-color: none;
+}
+.charakter:last-child {
+    margin-bottom: 0;
+}
+

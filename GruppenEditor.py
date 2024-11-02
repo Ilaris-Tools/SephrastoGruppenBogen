@@ -2,11 +2,14 @@ from PySide6 import QtCore, QtWidgets, QtGui
 from PySide6.QtWidgets import QLabel as QL
 from QtUtils.ProgressDialogExt import ProgressDialogExt
 from Serialization import Serialization
+from QtUtils.WebEngineViewPlus import WebEngineViewPlus
+from PySide6.QtGui import QPageLayout, QPageSize
 
 from EinstellungenWrapper import EinstellungenWrapper
 
 from .UI.MainForm import Ui_Form as MainForm
 from .UI.CharakterTab import Ui_Form as CharakterTab
+from .Gruppe import Gruppe
 import Charakter
 import Datenbank
 import json
@@ -21,6 +24,7 @@ class GruppenEditor(object):
         self.charaktere = []
         self.tabs = []
         self.savepath = None
+        self.gruppe = Gruppe()
         self.root = QtWidgets.QWidget()  # empty widget to be filled
         self.ui = MainForm()  # ui from qt designer
         self.ui.setupUi(self.root)  # setup generated from qt designer
@@ -29,11 +33,20 @@ class GruppenEditor(object):
 
     def setupUi(self):
         """custom setup to add logic to ui, also called from init."""
-        # add more setup here 
+        # buttons and actions
         self.ui.btnSave.clicked.connect(self.save)
-        self.ui.btnLoadChar.clicked.connect(self.addCharakterTab)
+        self.ui.btnOpen.clicked.connect(self.load)
+        self.ui.btnExport.clicked.connect(self.export)
+        self.ui.btnLoadChar.clicked.connect(self.addCharakter)
         # self.ui.tabs.changeEvent = self.tabChanged
         self.ui.tabs.tabBar().tabBarClicked.connect(self.tabChanged)
+        # edit fields
+        self.ui.leName.textChanged.connect(lambda x: setattr(self.gruppe, "name", x))
+        self.ui.sbColumns.valueChanged.connect(lambda x: setattr(self.gruppe, "columns", x))
+        # for fName, wName in self.gruppe.fieldMap.items():
+        #     field = getattr(self.ui, wName)
+        #     field.textChanged.connect(lambda: setattr(self.gruppe, fName, field.text()))
+        # self.ui.leName.textChanged.connect(lambda: self.gruppe.name = self.ui.leName.text())
     
     def updateUI(self, renderChars=False):
         """Update the UI."""
@@ -48,23 +61,27 @@ class GruppenEditor(object):
     def tabChanged(self, tabNumber):
         """Called when tab is changed."""
         if tabNumber == len(self.charaktere)+1:
-            self.addCharakterTab()
+            self.addCharakter()
     
-    def addCharakterTab(self):
+    def addCharakter(self):
+        """Add a new character to the group."""
         filePath, _ = QtWidgets.QFileDialog.getOpenFileName(
             self.root, "Charakter laden", Wolke.Settings["Pfad-Chars"], 
             "XML Dateien (*.xml);;Alle Dateien (*)")
         if not filePath:
             return
         char = self.loadChar(filePath)
+        char.tab = self.charakterTab()
+        self.renderCharTab(char)
+        self.charaktere.append(char)
+        self.updateUI()
+
+    def charakterTab(self):
         charTab = CharakterTab()
         charTab.widget = QtWidgets.QWidget()
         charTab.setupUi(charTab.widget)
         charTab.btnRemove.clicked.connect(self.removeCurrentChar)
-        char.tab = charTab
-        self.renderCharTab(char)
-        self.charaktere.append(char)
-        self.updateUI()
+        return charTab
 
     def renderCharTab(self, char):
         # char.tab.widget.gbAllgemein.setLayout(QtWidgets.QHBoxLayout())
@@ -172,31 +189,85 @@ class GruppenEditor(object):
         for char in self.charaktere:
             ser = Serialization.getSerializer(".json", 'Charakter')
             char.serialize(ser)
-            serX = Serialization.getSerializer(".xml", 'Charakter')
-            char.serialize(ser)
-            char.serialize(serX)
             gruppe["charaktere"].append(ser.root["Charakter"])
-            charDict = ser.root
-            # print(ser.root)
-            print("serizlized deser now")
             dechar = Charakter.Char()
             deser = Serialization.getDeserializer(".json", 'Charakter')
             deser.initFromSerializer(ser)
-            deserx = Serialization.getDeserializer(".xml", 'Charakter')
-            deserx.initFromSerializer(serX)
             deser.find("Charakter")  # TODO: fix this in serializer? should start at char node not root?
-            # print("DESER ROOT")
-            # print(deser.root)
             dechar.deserialize(deser)
-            # print(dechar)
+            dechar.aktualisieren()  # berechnet abgeleitete Werte wie WS
             print(dechar.name)
-            print(dechar.eigenheiten)
-            print(dechar.fertigkeiten)
-            print(dechar.talente)
-            print(dechar.name)
-            print(dechar.attribute)
-            print(dechar.epAttribute)
+            print(dechar.vorteile)
         print(fname)
         with open(fname, "w") as f:
             json.dump(gruppe, f, indent=4, ensure_ascii=False)
 
+    def load(self):
+        """Called on load button click."""
+        fname, _ = QtWidgets.QFileDialog.getOpenFileName(
+            self.root, "Gruppe laden", Wolke.Settings["Pfad-Chars"], 
+            "JSON Dateien (*.json);;Alle Dateien (*)")
+        if not fname:
+            return
+        with open(fname, "r") as f:
+            gruppe = json.load(f)
+        self.ui.leName.setText(gruppe["name"])
+        # TODO: ask if unsaved changes.. clear or respawn GruppenEditor?
+        self.charaktere = []  # make sure allfields are updated and title etc..
+        for charDict in gruppe["charaktere"]:
+            # preload hausregeln 
+            storedHausregeln = gruppe.get("hausregeln", "Keine")
+            availableHausregeln = EinstellungenWrapper.getDatenbanken(Wolke.Settings["Pfad-Regeln"])
+        
+            if storedHausregeln in availableHausregeln:
+                hausregeln = storedHausregeln
+            else:
+                messagebox = QtWidgets.QMessageBox()
+                messagebox.setWindowTitle("Hausregeln nicht gefunden!")
+                messagebox.setText(f"Der Charakter wurde mit den Hausregeln {storedHausregeln} erstellt. Die Datei konnte nicht gefunden werden.\n\n"\
+                    "Bitte wähle aus, mit welchen Hausregeln der Charakter stattdessen geladen werden soll.")
+                messagebox.setIcon(QtWidgets.QMessageBox.Critical )
+                messagebox.setStandardButtons(QtWidgets.QMessageBox.Ok)
+                messagebox.setWindowFlags(QtCore.Qt.CustomizeWindowHint | QtCore.Qt.WindowTitleHint)
+                combo = QtWidgets.QComboBox()
+                combo.addItems(availableHausregeln)
+                messagebox.layout().addWidget(combo, 1, 2)
+                messagebox.exec()
+                hausregeln = combo.currentText()
+
+            self.loadDB(hausregeln)
+
+            char = Charakter.Char()
+            deser = Serialization.getDeserializer(".json", 'Charakter')
+            deser._nodeStack = [{"Charakter": charDict}]
+            deser._tagStack = []
+            deser._currentNode = deser._nodeStack[0]
+            # deser.initFromSerializer(ser)
+            deser.find("Charakter")
+            char.deserialize(deser)
+            char.aktualisieren()
+            print(char.name)
+            char.tab = self.charakterTab()
+            self.charaktere.append(char)
+        self.updateUI(renderChars=True)
+        
+    def export(self):
+        """Called on export button click."""
+        import os
+        import PdfSerializer
+        htmlPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets")
+        pdfFile = os.path.join(htmlPath, "test.pdf")
+        html = self.gruppe.toHtml(self.charaktere)
+        with open(os.path.join(htmlPath, "test.html"), "w") as f:
+            f.write(html)
+
+        pl = QtGui.QPageLayout()
+        pl.setPageSize(QtGui.QPageSize(QtGui.QPageSize.A4))
+        pl.setOrientation(QtGui.QPageLayout.Landscape)
+        pl.setTopMargin(0)
+        pl.setRightMargin(0)
+        pl.setBottomMargin(0)
+        pl.setLeftMargin(0)
+        # webEngineView = WebEngineViewPlus()
+        pfad = PdfSerializer.convertHtmlToPdf(html, htmlPath, pl, out_file=pdfFile)
+        print(pfad)
