@@ -72,7 +72,7 @@ body {
     overflow: hidden;
     border: solid green 0mm;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 2mm;
 }
 
@@ -85,8 +85,8 @@ h1 {
     flex: 1;
     margin: 0;
     padding: 1mm;
-    min-width: 2cm;
-    max-width: 8cm;
+    /* min-width: 2cm;
+    max-width: 8cm; */
     list-style-type: none;
 }
 
@@ -103,48 +103,21 @@ h1 {
 
 .row {
     border: solid 1mm rgba(68, 44, 14, 0.719);
-    border-radius: 2mm;
+    border-radius: 1.5mm;
     /* border-image: url({assets}/border.png) 10 stretch; */
     background: rgba(255, 255, 255, 0.726);
     margin-bottom: 2mm;
-    overflow: hidden;
+    /* overflow: clip; */
+    font-size: 4mm;
+    line-height: 1;
 }
-/* .row {
-    position: relative;
-    margin-bottom: 3mm;
-    padding: 2mm;
-    z-index:2;
-    background: rgb(255, 255, 255);
-} */
-/* pseudo elem hack to combine curved gradient border as mask */
-/* .row::before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    top: -1mm;
-    left: -1mm;
-    right: -1mm;
-    bottom: -3mm;
-    background: linear-gradient(45deg,
-            rgba(78, 40, 2, 0.7),
-            rgba(151, 117, 23, 0.7), 
-            rgba(49, 24, 7, 0.7), 
-            rgba(185, 150, 36, 0.7));
-    mask: 
-      linear-gradient(#000 0 0) exclude, 
-      linear-gradient(#000 0 0) content-box;
-    border-radius: 2mm;
-    margin-bottom: 2mm;
-    padding: 1mm;
-    overflow: hidden;
-} */
 
 .charakter {
     /* background-color: var(--HB_Color_Background); */
-    position: relative;
-    padding: 0px;
-    padding-top: 0px;
-    margin-bottom: 0cm;
+    /* position: relative; */
+    /* padding: 0px; */
+    /* padding-top: 0px; */
+    /* margin-bottom: 0cm; */
 }
 
 h2 {
@@ -171,33 +144,50 @@ h2 {
 
 table {
     width: 100%;
+    max-width: 100%;
     margin: 0;
     padding: 0;
     column-span: none;
-    background-color: yellow;
     border-collapse: collapse;
     border-spacing: 0;
     -webkit-column-span: none;
     font-size: 4mm;
     line-height: 1;
-    
 }
+
 
 tr {
     margin-bottom: -4mm;
+    max-width: 100%;
 }
 
-tr, td {
+table.fertigkeiten {
+    table-layout: fixed;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+table.fertigkeiten td.pw {
+    width: 5mm;
+    border-right: 0.5mm solid rgba(68, 44, 14, 0.719);
+    text-align: center;
+}
+
+tr.freiefertigkeiten td {
+    border-top: 0.5mm solid rgba(68, 44, 14, 0.719);
+    padding-top: 0.2mm;
+    padding-bottom: 0.8mm;
+}
+
+/* tr, td {
     background-color: transparent;
     border: 0;
     padding: 0;
-}
+} */
 
-td.pw {
-    width: 1cm;
-    font-weight: 400;
-    text-align: center;
-    border-left: 0.8mm solid rgba(68, 44, 14, 0.719);
+
+table.fertigkeiten td.fertigkeitname {
+    padding-left: 1mm;
+    /* max-width: calc(inherit-10mm); */
 }
 
 
@@ -220,27 +210,8 @@ table.werte td:nth-child(odd) {
     background-color: rgba(255, 194, 144, 0.345);
 }
 
-.charakter table {
-    margin: 0;
-    column-span: none;
-    background-color: transparent;
-    border-style: none;
-    border-image: none;
-    -webkit-column-span: none;
-    
-    tr:nth-child(odd) {
-        background-color: transparent;
-    }
-    
-    td,
-    th {
-        padding: 0px;
-    }
+span.fertname {
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: clip;
 }
-.charakter:first-child {
-    background-color: none;
-}
-.charakter:last-child {
-    margin-bottom: 0;
-}
-

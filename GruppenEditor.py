@@ -4,6 +4,8 @@ from QtUtils.ProgressDialogExt import ProgressDialogExt
 from Serialization import Serialization
 from QtUtils.WebEngineViewPlus import WebEngineViewPlus
 from PySide6.QtGui import QPageLayout, QPageSize
+import os
+import PdfSerializer
 
 from EinstellungenWrapper import EinstellungenWrapper
 
@@ -16,8 +18,25 @@ import json
 from Wolke import Wolke
 
 
+class MyProgressDLG(ProgressDialogExt):
+    def __init__(self, title="Laden", parent=None):
+        super().__init__(parent)
+        self.disableCancel()
+        self.setWindowTitle(title)
+        self.setLabelText("Lade Datenbank")
+        self.show()
+
+    def tick(self, value, label=None):
+        self.setValue(value)
+        if label is not None:
+            self.setLabelText(label)
+
+    def stop(self):
+        self.hide()
+        self.deleteLater()
+
 class GruppenEditor(object):
-    """Main class contains all the logic for the (generated) UI."""
+    """Main UI class contains all the logic for the GruppenEditor Window."""
 
     def __init__(self):
         """Automatically called when the Editor window is created."""
@@ -43,6 +62,7 @@ class GruppenEditor(object):
         # edit fields
         self.ui.leName.textChanged.connect(lambda x: setattr(self.gruppe, "name", x))
         self.ui.sbColumns.valueChanged.connect(lambda x: setattr(self.gruppe, "columns", x))
+        self.ui.cbFreieFertigkeiten.stateChanged.connect(lambda x: setattr(self.gruppe, "freiefertigkeiten", x==2))
         # for fName, wName in self.gruppe.fieldMap.items():
         #     field = getattr(self.ui, wName)
         #     field.textChanged.connect(lambda: setattr(self.gruppe, fName, field.text()))
@@ -134,23 +154,10 @@ class GruppenEditor(object):
             Wolke.Char = Charakter.Char()
             Wolke.Char.savepath = path
             success, loadResult = Wolke.Char.loadFile(path)
-            # if loadResult[0] != Wolke.Char.LoadResultNone:
-            #     messageBox = QtWidgets.QMessageBox()
-            #     icon = { 1 : QtWidgets.QMessageBox.Information, 2 : QtWidgets.QMessageBox.Warning, 3 : QtWidgets.QMessageBox.Critical }
-            #     messageBox.setIcon(icon[loadResult[0]])
-            #     messageBox.setWindowTitle(loadResult[1])
-            #     messageBox.setText(loadResult[2])
-            #     messageBox.setStandardButtons(QtWidgets.QMessageBox.Ok)
-            #     messageBox.setEscapeButton(QtWidgets.QMessageBox.Close)  
-            #     messageBox.exec()
-
             if not success:
                 Wolke.Char.savepath = ""
-
             dlg.setValue(70, True)   
-
             Wolke.Char.aktualisieren() # A bit later because it needs access to itself
-
             dlg.setLabelText("Starte Editor")
             dlg.setValue(80, True)
         finally:
@@ -270,14 +277,28 @@ class GruppenEditor(object):
         
     def export(self):
         """Called on export button click."""
-        import os
-        import PdfSerializer
+        if self.savepath:
+            fname = self.savepath.replace(".json", ".pdf")
+        else:
+            fname = Wolke.Settings["Pfad-Chars"]
+        fname, _ = QtWidgets.QFileDialog.getSaveFileName(
+            self.root, "Gruppe Exportieren", fname,
+            "PDF Dateien (*.pdf);;HTML Dateien (*.html);;Alle Dateien (*)")
+        if not fname:
+            return
+        dlg = MyProgressDLG("Gruppe exportieren")
+        dlg.tick(10, "Generiere HTML")
         htmlPath = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets")
-        pdfFile = os.path.join(htmlPath, "test.pdf")
-        html = self.gruppe.toHtml(self.charaktere)
-        with open(os.path.join(htmlPath, "test.html"), "w") as f:
-            f.write(html)
-
+        htmlExport = fname.endswith(".html")
+        html = self.gruppe.toHtml(self.charaktere)  # todo fix paths if html export
+        if htmlExport:
+            dlg.tick(50, "Speichere HTML")
+            with open(os.path.join(htmlPath, fname), "w") as f:
+                f.write(html)
+            dlg.setValue(100, True)
+            dlg.hide()
+            dlg.deleteLater()
+        dlg.tick(50, "Generiere PDF")
         pl = QtGui.QPageLayout()
         pl.setPageSize(QtGui.QPageSize(QtGui.QPageSize.A4))
         pl.setOrientation(QtGui.QPageLayout.Landscape)
@@ -285,6 +306,7 @@ class GruppenEditor(object):
         pl.setRightMargin(0)
         pl.setBottomMargin(0)
         pl.setLeftMargin(0)
-        # webEngineView = WebEngineViewPlus()
-        pfad = PdfSerializer.convertHtmlToPdf(html, htmlPath, pl, out_file=pdfFile)
-        print(pfad)
+        # TODO: looks like file is not saved when opened somewhere (no error)
+        path = PdfSerializer.convertHtmlToPdf(html, htmlPath, pl, out_file=fname)
+        dlg.tick(100, "Fertig gespeichert")
+        dlg.stop()
