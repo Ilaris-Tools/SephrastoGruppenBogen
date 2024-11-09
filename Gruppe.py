@@ -9,9 +9,12 @@ class Gruppe:
     # charaktere: List[Char]
     path: str = ""
     columns: int = 4
+    schriftgroesse: int = 12
     freiefertigkeiten: bool = True
     eigenheiten: bool = True
-    schriftgroesse: int = 12
+    beschreibung: bool = True
+    bild: bool = True
+    kampfwerte: bool = True
 
     def add(self, person):
         self.mitglieder.append(person)
@@ -81,7 +84,9 @@ class Gruppe:
         assets = os.path.join(folder, "assets")
         backgroundImg = os.path.join(folder, "assets", "Hintergrund.jpg")
         backgroundImg = backgroundImg.replace("\\", "/")
+        headheight = str("15mm") if self.description else str("5mm")
         html = html.replace("{css}", css)
+        html = html.replace("{headheight}", headheight)
         html = html.replace("{charaktere}", "".join(chars))
         html = html.replace("{name}", self.name)
         html = html.replace("{backgroundImg}", backgroundImg)

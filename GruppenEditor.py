@@ -63,6 +63,7 @@ class GruppenEditor(object):
         self.ui.leName.textChanged.connect(lambda x: setattr(self.gruppe, "name", x))
         self.ui.sbColumns.valueChanged.connect(lambda x: setattr(self.gruppe, "columns", x))
         self.ui.cbFreieFertigkeiten.stateChanged.connect(lambda x: setattr(self.gruppe, "freiefertigkeiten", x==2))
+        self.ui.cbBeschreibung.stateChanged.connect(lambda x: setattr(self.gruppe, "beschreibung", x==2))
         # for fName, wName in self.gruppe.fieldMap.items():
         #     field = getattr(self.ui, wName)
         #     field.textChanged.connect(lambda: setattr(self.gruppe, fName, field.text()))
@@ -70,6 +71,9 @@ class GruppenEditor(object):
     
     def updateUI(self, renderChars=False):
         """Update the UI."""
+        # update group form
+        self.updateGroupTab()
+        # update charakter tabs
         for idx in reversed(range(self.ui.tabs.count()-1)):
             if idx != 0:
                 self.ui.tabs.removeTab(idx)
@@ -77,6 +81,18 @@ class GruppenEditor(object):
             if renderChars:
                 self.renderCharTab(char) 
             self.ui.tabs.insertTab(idx+1, char.tab.widget, char.name)
+    
+    def updateGroupTab(self):
+        self.ui.leName.setText(self.gruppe.name)
+        self.ui.sbColumns.setValue(self.gruppe.columns)
+        self.ui.cbFreieFertigkeiten.setChecked(self.gruppe.freiefertigkeiten)
+        self.ui.cbBeschreibung.setChecked(self.gruppe.beschreibung)
+        self.ui.cbBild.setChecked(self.gruppe.bild)
+        self.ui.cbAttribute.setChecked(self.gruppe.attribute)
+        self.ui.cbEigenheiten.setChecked(self.gruppe.eigenheiten)
+        self.ui.cbKampfwerte.setChecked(self.gruppe.kampfwerte)
+        # self.ui.cbEp
+
     
     def tabChanged(self, tabNumber):
         """Called when tab is changed."""
