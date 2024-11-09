@@ -16,9 +16,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFormLayout,
-    QFrame, QGroupBox, QHBoxLayout, QLabel,
-    QLineEdit, QPushButton, QSizePolicy, QSpacerItem,
-    QSpinBox, QTabWidget, QVBoxLayout, QWidget)
+    QFrame, QGridLayout, QGroupBox, QHBoxLayout,
+    QLabel, QLineEdit, QPushButton, QSizePolicy,
+    QSpacerItem, QSpinBox, QTabWidget, QVBoxLayout,
+    QWidget)
 
 class Ui_Form(object):
     def setupUi(self, Form):
@@ -92,18 +93,18 @@ class Ui_Form(object):
 
         self.groupBox_2 = QGroupBox(self.frame_4)
         self.groupBox_2.setObjectName(u"groupBox_2")
-        self.formLayout_2 = QFormLayout(self.groupBox_2)
-        self.formLayout_2.setObjectName(u"formLayout_2")
+        self.verticalLayout_4 = QVBoxLayout(self.groupBox_2)
+        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
         self.frame_5 = QFrame(self.groupBox_2)
         self.frame_5.setObjectName(u"frame_5")
         self.frame_5.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_5.setFrameShadow(QFrame.Shadow.Raised)
         self.horizontalLayout_5 = QHBoxLayout(self.frame_5)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-        self.checkBox = QCheckBox(self.frame_5)
-        self.checkBox.setObjectName(u"checkBox")
+        self.btnEp = QCheckBox(self.frame_5)
+        self.btnEp.setObjectName(u"btnEp")
 
-        self.horizontalLayout_5.addWidget(self.checkBox)
+        self.horizontalLayout_5.addWidget(self.btnEp)
 
         self.cbBild = QCheckBox(self.frame_5)
         self.cbBild.setObjectName(u"cbBild")
@@ -115,6 +116,11 @@ class Ui_Form(object):
 
         self.horizontalLayout_5.addWidget(self.cbEigenheiten)
 
+        self.cbBeschreibung = QCheckBox(self.frame_5)
+        self.cbBeschreibung.setObjectName(u"cbBeschreibung")
+
+        self.horizontalLayout_5.addWidget(self.cbBeschreibung)
+
         self.cbAttribute = QCheckBox(self.frame_5)
         self.cbAttribute.setObjectName(u"cbAttribute")
 
@@ -125,58 +131,79 @@ class Ui_Form(object):
 
         self.horizontalLayout_5.addWidget(self.cbKampfwerte)
 
-        self.cbBeschreibung = QCheckBox(self.frame_5)
-        self.cbBeschreibung.setObjectName(u"cbBeschreibung")
+        self.cbFreieFertigkeiten = QCheckBox(self.frame_5)
+        self.cbFreieFertigkeiten.setObjectName(u"cbFreieFertigkeiten")
+        self.cbFreieFertigkeiten.setChecked(True)
 
-        self.horizontalLayout_5.addWidget(self.cbBeschreibung)
+        self.horizontalLayout_5.addWidget(self.cbFreieFertigkeiten)
 
 
-        self.formLayout_2.setWidget(1, QFormLayout.FieldRole, self.frame_5)
+        self.verticalLayout_4.addWidget(self.frame_5)
 
-        self.label_3 = QLabel(self.groupBox_2)
-        self.label_3.setObjectName(u"label_3")
-
-        self.formLayout_2.setWidget(2, QFormLayout.LabelRole, self.label_3)
-
-        self.ddVorteile = QComboBox(self.groupBox_2)
-        self.ddVorteile.addItem("")
-        self.ddVorteile.addItem("")
-        self.ddVorteile.addItem("")
-        self.ddVorteile.setObjectName(u"ddVorteile")
-
-        self.formLayout_2.setWidget(2, QFormLayout.FieldRole, self.ddVorteile)
-
-        self.label_4 = QLabel(self.groupBox_2)
-        self.label_4.setObjectName(u"label_4")
-
-        self.formLayout_2.setWidget(3, QFormLayout.LabelRole, self.label_4)
-
-        self.ddFertigkeiten = QComboBox(self.groupBox_2)
+        self.frame_6 = QFrame(self.groupBox_2)
+        self.frame_6.setObjectName(u"frame_6")
+        self.frame_6.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_6.setFrameShadow(QFrame.Shadow.Raised)
+        self.gridLayout = QGridLayout(self.frame_6)
+        self.gridLayout.setObjectName(u"gridLayout")
+        self.ddFertigkeiten = QComboBox(self.frame_6)
         self.ddFertigkeiten.addItem("")
         self.ddFertigkeiten.addItem("")
         self.ddFertigkeiten.addItem("")
         self.ddFertigkeiten.setObjectName(u"ddFertigkeiten")
 
-        self.formLayout_2.setWidget(3, QFormLayout.FieldRole, self.ddFertigkeiten)
+        self.gridLayout.addWidget(self.ddFertigkeiten, 2, 1, 1, 1)
 
-        self.cbFreieFertigkeiten = QCheckBox(self.groupBox_2)
-        self.cbFreieFertigkeiten.setObjectName(u"cbFreieFertigkeiten")
-        self.cbFreieFertigkeiten.setChecked(True)
-
-        self.formLayout_2.setWidget(5, QFormLayout.FieldRole, self.cbFreieFertigkeiten)
-
-        self.label_5 = QLabel(self.groupBox_2)
+        self.label_5 = QLabel(self.frame_6)
         self.label_5.setObjectName(u"label_5")
 
-        self.formLayout_2.setWidget(6, QFormLayout.LabelRole, self.label_5)
+        self.gridLayout.addWidget(self.label_5, 3, 0, 1, 1)
 
-        self.ddZauber = QComboBox(self.groupBox_2)
+        self.ddVorteile = QComboBox(self.frame_6)
+        self.ddVorteile.addItem("")
+        self.ddVorteile.addItem("")
+        self.ddVorteile.addItem("")
+        self.ddVorteile.setObjectName(u"ddVorteile")
+
+        self.gridLayout.addWidget(self.ddVorteile, 1, 1, 1, 1)
+
+        self.ddZauber = QComboBox(self.frame_6)
         self.ddZauber.addItem("")
         self.ddZauber.addItem("")
         self.ddZauber.addItem("")
         self.ddZauber.setObjectName(u"ddZauber")
 
-        self.formLayout_2.setWidget(6, QFormLayout.FieldRole, self.ddZauber)
+        self.gridLayout.addWidget(self.ddZauber, 3, 1, 1, 1)
+
+        self.label_4 = QLabel(self.frame_6)
+        self.label_4.setObjectName(u"label_4")
+
+        self.gridLayout.addWidget(self.label_4, 2, 0, 1, 1)
+
+        self.label_3 = QLabel(self.frame_6)
+        self.label_3.setObjectName(u"label_3")
+
+        self.gridLayout.addWidget(self.label_3, 0, 0, 2, 2)
+
+        self.btnEditVorteile = QPushButton(self.frame_6)
+        self.btnEditVorteile.setObjectName(u"btnEditVorteile")
+        icon = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.FolderNew))
+        self.btnEditVorteile.setIcon(icon)
+
+        self.gridLayout.addWidget(self.btnEditVorteile, 1, 2, 1, 1)
+
+        self.btnEditFertigkeiten = QPushButton(self.frame_6)
+        self.btnEditFertigkeiten.setObjectName(u"btnEditFertigkeiten")
+
+        self.gridLayout.addWidget(self.btnEditFertigkeiten, 2, 2, 1, 1)
+
+        self.btnEditZauber = QPushButton(self.frame_6)
+        self.btnEditZauber.setObjectName(u"btnEditZauber")
+
+        self.gridLayout.addWidget(self.btnEditZauber, 3, 2, 1, 1)
+
+
+        self.verticalLayout_4.addWidget(self.frame_6)
 
 
         self.verticalLayout_3.addWidget(self.groupBox_2)
@@ -219,8 +246,8 @@ class Ui_Form(object):
 
         self.verticalLayout_2.addWidget(self.frame_3)
 
-        icon = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ContactNew))
-        self.tabs.addTab(self.tabNeu, icon, "")
+        icon1 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ContactNew))
+        self.tabs.addTab(self.tabNeu, icon1, "")
 
         self.verticalLayout.addWidget(self.tabs)
 
@@ -232,15 +259,15 @@ class Ui_Form(object):
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.btnReloadAll = QPushButton(self.frame_2)
         self.btnReloadAll.setObjectName(u"btnReloadAll")
-        icon1 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ViewRefresh))
-        self.btnReloadAll.setIcon(icon1)
+        icon2 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ViewRefresh))
+        self.btnReloadAll.setIcon(icon2)
 
         self.horizontalLayout_2.addWidget(self.btnReloadAll)
 
         self.btnRemoveCurrentChar = QPushButton(self.frame_2)
         self.btnRemoveCurrentChar.setObjectName(u"btnRemoveCurrentChar")
-        icon2 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.EditDelete))
-        self.btnRemoveCurrentChar.setIcon(icon2)
+        icon3 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.EditDelete))
+        self.btnRemoveCurrentChar.setIcon(icon3)
 
         self.horizontalLayout_2.addWidget(self.btnRemoveCurrentChar)
 
@@ -250,22 +277,22 @@ class Ui_Form(object):
 
         self.btnOpen = QPushButton(self.frame_2)
         self.btnOpen.setObjectName(u"btnOpen")
-        icon3 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentOpen))
-        self.btnOpen.setIcon(icon3)
+        icon4 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentOpen))
+        self.btnOpen.setIcon(icon4)
 
         self.horizontalLayout_2.addWidget(self.btnOpen)
 
         self.btnSave = QPushButton(self.frame_2)
         self.btnSave.setObjectName(u"btnSave")
-        icon4 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentSave))
-        self.btnSave.setIcon(icon4)
+        icon5 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentSave))
+        self.btnSave.setIcon(icon5)
 
         self.horizontalLayout_2.addWidget(self.btnSave)
 
         self.btnExport = QPushButton(self.frame_2)
         self.btnExport.setObjectName(u"btnExport")
-        icon5 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentPrint))
-        self.btnExport.setIcon(icon5)
+        icon6 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentPrint))
+        self.btnExport.setIcon(icon6)
 
         self.horizontalLayout_2.addWidget(self.btnExport)
 
@@ -295,28 +322,31 @@ class Ui_Form(object):
         self.cbWertlos.setText(QCoreApplication.translate("Form", u"Werte ausblenden", None))
         self.label_6.setText(QCoreApplication.translate("Form", u"Name", None))
         self.groupBox_2.setTitle(QCoreApplication.translate("Form", u"Anzeige", None))
-        self.checkBox.setText(QCoreApplication.translate("Form", u"EP", None))
+        self.btnEp.setText(QCoreApplication.translate("Form", u"EP", None))
         self.cbBild.setText(QCoreApplication.translate("Form", u"Bild", None))
         self.cbEigenheiten.setText(QCoreApplication.translate("Form", u"Eigenheiten", None))
+        self.cbBeschreibung.setText(QCoreApplication.translate("Form", u"Beschreibung", None))
         self.cbAttribute.setText(QCoreApplication.translate("Form", u"Attribute", None))
         self.cbKampfwerte.setText(QCoreApplication.translate("Form", u"Kampfwerte", None))
-        self.cbBeschreibung.setText(QCoreApplication.translate("Form", u"Beschreibung", None))
-        self.label_3.setText(QCoreApplication.translate("Form", u"Vorteile", None))
-        self.ddVorteile.setItemText(0, QCoreApplication.translate("Form", u"Alle", None))
-        self.ddVorteile.setItemText(1, QCoreApplication.translate("Form", u"Keine", None))
-        self.ddVorteile.setItemText(2, QCoreApplication.translate("Form", u"Benutzerdefiniert", None))
-
-        self.label_4.setText(QCoreApplication.translate("Form", u"Fertigkeiten", None))
+        self.cbFreieFertigkeiten.setText(QCoreApplication.translate("Form", u"Freie Fertigkeiten", None))
         self.ddFertigkeiten.setItemText(0, QCoreApplication.translate("Form", u"Alle", None))
         self.ddFertigkeiten.setItemText(1, QCoreApplication.translate("Form", u"Keine", None))
         self.ddFertigkeiten.setItemText(2, QCoreApplication.translate("Form", u"Benutzerdefiniert", None))
 
-        self.cbFreieFertigkeiten.setText(QCoreApplication.translate("Form", u"Freie Fertigkeiten anzeigen", None))
         self.label_5.setText(QCoreApplication.translate("Form", u"Zauber", None))
+        self.ddVorteile.setItemText(0, QCoreApplication.translate("Form", u"Alle", None))
+        self.ddVorteile.setItemText(1, QCoreApplication.translate("Form", u"Keine", None))
+        self.ddVorteile.setItemText(2, QCoreApplication.translate("Form", u"Benutzerdefiniert", None))
+
         self.ddZauber.setItemText(0, QCoreApplication.translate("Form", u"Alle", None))
         self.ddZauber.setItemText(1, QCoreApplication.translate("Form", u"Keine", None))
         self.ddZauber.setItemText(2, QCoreApplication.translate("Form", u"Benutzerdefiniert", None))
 
+        self.label_4.setText(QCoreApplication.translate("Form", u"Fertigkeiten", None))
+        self.label_3.setText(QCoreApplication.translate("Form", u"Vorteile", None))
+        self.btnEditVorteile.setText("")
+        self.btnEditFertigkeiten.setText("")
+        self.btnEditZauber.setText("")
         self.tabs.setTabText(self.tabs.indexOf(self.tabGruppe), QCoreApplication.translate("Form", u"Gruppe", None))
         self.btnLoadChar.setText(QCoreApplication.translate("Form", u"Charakter laden", None))
         self.tabs.setTabText(self.tabs.indexOf(self.tabNeu), QCoreApplication.translate("Form", u"Charakter hinzuf\u00fcgen", None))

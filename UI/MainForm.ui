@@ -106,8 +106,8 @@
                <property name="title">
                 <string>Anzeige</string>
                </property>
-               <layout class="QFormLayout" name="formLayout_2">
-                <item row="1" column="1">
+               <layout class="QVBoxLayout" name="verticalLayout_4">
+                <item>
                  <widget class="QFrame" name="frame_5">
                   <property name="frameShape">
                    <enum>QFrame::Shape::StyledPanel</enum>
@@ -117,7 +117,7 @@
                   </property>
                   <layout class="QHBoxLayout" name="horizontalLayout_5">
                    <item>
-                    <widget class="QCheckBox" name="checkBox">
+                    <widget class="QCheckBox" name="btnEp">
                      <property name="text">
                       <string>EP</string>
                      </property>
@@ -138,6 +138,13 @@
                     </widget>
                    </item>
                    <item>
+                    <widget class="QCheckBox" name="cbBeschreibung">
+                     <property name="text">
+                      <string>Beschreibung</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
                     <widget class="QCheckBox" name="cbAttribute">
                      <property name="text">
                       <string>Attribute</string>
@@ -152,101 +159,130 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QCheckBox" name="cbBeschreibung">
+                    <widget class="QCheckBox" name="cbFreieFertigkeiten">
                      <property name="text">
-                      <string>Beschreibung</string>
+                      <string>Freie Fertigkeiten</string>
+                     </property>
+                     <property name="checked">
+                      <bool>true</bool>
                      </property>
                     </widget>
                    </item>
                   </layout>
                  </widget>
                 </item>
-                <item row="2" column="0">
-                 <widget class="QLabel" name="label_3">
-                  <property name="text">
-                   <string>Vorteile</string>
+                <item>
+                 <widget class="QFrame" name="frame_6">
+                  <property name="frameShape">
+                   <enum>QFrame::Shape::StyledPanel</enum>
                   </property>
-                 </widget>
-                </item>
-                <item row="2" column="1">
-                 <widget class="QComboBox" name="ddVorteile">
-                  <item>
-                   <property name="text">
-                    <string>Alle</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>Keine</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>Benutzerdefiniert</string>
-                   </property>
-                  </item>
-                 </widget>
-                </item>
-                <item row="3" column="0">
-                 <widget class="QLabel" name="label_4">
-                  <property name="text">
-                   <string>Fertigkeiten</string>
+                  <property name="frameShadow">
+                   <enum>QFrame::Shadow::Raised</enum>
                   </property>
-                 </widget>
-                </item>
-                <item row="3" column="1">
-                 <widget class="QComboBox" name="ddFertigkeiten">
-                  <item>
-                   <property name="text">
-                    <string>Alle</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>Keine</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>Benutzerdefiniert</string>
-                   </property>
-                  </item>
-                 </widget>
-                </item>
-                <item row="5" column="1">
-                 <widget class="QCheckBox" name="cbFreieFertigkeiten">
-                  <property name="text">
-                   <string>Freie Fertigkeiten anzeigen</string>
-                  </property>
-                  <property name="checked">
-                   <bool>true</bool>
-                  </property>
-                 </widget>
-                </item>
-                <item row="6" column="0">
-                 <widget class="QLabel" name="label_5">
-                  <property name="text">
-                   <string>Zauber</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="6" column="1">
-                 <widget class="QComboBox" name="ddZauber">
-                  <item>
-                   <property name="text">
-                    <string>Alle</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>Keine</string>
-                   </property>
-                  </item>
-                  <item>
-                   <property name="text">
-                    <string>Benutzerdefiniert</string>
-                   </property>
-                  </item>
+                  <layout class="QGridLayout" name="gridLayout">
+                   <item row="2" column="1">
+                    <widget class="QComboBox" name="ddFertigkeiten">
+                     <item>
+                      <property name="text">
+                       <string>Alle</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Keine</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Benutzerdefiniert</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QLabel" name="label_5">
+                     <property name="text">
+                      <string>Zauber</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QComboBox" name="ddVorteile">
+                     <item>
+                      <property name="text">
+                       <string>Alle</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Keine</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Benutzerdefiniert</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="QComboBox" name="ddZauber">
+                     <item>
+                      <property name="text">
+                       <string>Alle</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Keine</string>
+                      </property>
+                     </item>
+                     <item>
+                      <property name="text">
+                       <string>Benutzerdefiniert</string>
+                      </property>
+                     </item>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_4">
+                     <property name="text">
+                      <string>Fertigkeiten</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0" rowspan="2" colspan="2">
+                    <widget class="QLabel" name="label_3">
+                     <property name="text">
+                      <string>Vorteile</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="2">
+                    <widget class="QPushButton" name="btnEditVorteile">
+                     <property name="text">
+                      <string/>
+                     </property>
+                     <property name="icon">
+                      <iconset theme="QIcon::ThemeIcon::FolderNew"/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="2">
+                    <widget class="QPushButton" name="btnEditFertigkeiten">
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="2">
+                    <widget class="QPushButton" name="btnEditZauber">
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
                  </widget>
                 </item>
                </layout>
