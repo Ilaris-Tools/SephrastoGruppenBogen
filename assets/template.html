@@ -1,0 +1,31 @@
+<html>
+<head>
+    <title>Gruppenbogen - {name}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script type="text/javascript" src="qrc:///qtwebchannel/qwebchannel.js"></script>
+    <script>
+    window.onload = function(){{
+        new QWebChannel(qt.webChannelTransport,
+            function (channel) {{
+                Bridge = channel.objects.Bridge;
+                Bridge.htmlLoaded();
+            }}
+        );
+    }}
+    </script>
+    <style>
+        {css}
+    </style>
+</head>
+<body>
+    <div id="background"></div>
+    <div id="header">
+        <h1>{name}</h1>
+    </div>
+    <div id="content" class="columns">
+    <!-- <img src="{backgroundImg}" style="width: 3cm; height: 3cm;" /> -->
+        {charaktere}
+    </div>
+    <!-- <img src="{backgroundImg}" style="width: 3cm; height: 3cm;" /> -->
+</body>
+</html>

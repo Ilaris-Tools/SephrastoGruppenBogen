@@ -1,0 +1,217 @@
+:root {	
+    --HB_Color_Background: #EEE5CE; /* Light parchment */
+    --HB_Color_Accent: #e6d0b2;
+        /* Pastel green */
+        --HB_Color_HeaderUnderline: #C0AD6A;
+        /* Gold */
+        --HB_Color_HorizontalRule: #9C2B1B;
+        /* Maroon */
+        --HB_Color_HeaderText: #58180D;
+        /* Dark Maroon */
+        --HB_Color_MonsterStatBackground: #F2E5B5;
+        /* Light orange parchment */
+        --HB_Color_CaptionText: #766649;
+        /* Brown */
+        --HB_Color_WatercolorStain: #BBAD82;
+        /* Light brown */
+        --HB_Color_Footnotes: #C9AD6A;
+        /* Gold */
+    
+        /* Latex */
+        --LT_Dunkelrot: #450c15;
+        /* titel */
+        --LT_Braun: #6f5843;
+        /* Linien? */
+        --LT_DunkelBraun: #39220d;
+        --LT_Beige: #e7d1b3;
+        /* Kastenhintergrund */
+        --LT_Orange: #c86400;
+        /* = VTT */
+        --LT_Grau: #655743;
+        /* = VTT */
+        --LT_Blau: #425a66;
+        /* = VTT */
+        --LT_Lila: #8e5d6f;
+        /* = VTT */
+}
+
+@page {
+    size: A4 landscape;
+    padding: 5mm;
+} 
+
+body {
+    font-family: Crimson, sans-serif;
+    font-size: 12pt;
+    width: 10cm;
+}
+
+#background
+{
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background-color: red;
+    background-image: url("{backgroundImg}");
+    /* background-image: url("Hintergrund.jpg"); */
+    background-size: cover;
+}
+
+#content
+{
+    position: fixed;
+    /* border: solid black 1px; */
+    top: 2mm;
+    right: 8mm;
+    bottom: 8mm;
+    left: 8mm;
+    padding: 1mm;
+    /* background-color: white; */
+    overflow: hidden;
+    border: solid green 0mm;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 2mm;
+}
+
+
+h1 {
+    color: red;
+}
+
+.column {
+    flex: 1;
+    margin: 0;
+    padding: 1mm;
+    /* min-width: 2cm;
+    max-width: 8cm; */
+    list-style-type: none;
+}
+
+.row.head {
+    /* border: none; */
+    /* background: none; */
+    height: {headheight};
+}
+
+.avatar {
+    width: 1.5cm;
+    height: 1.5cm;
+}
+
+.row {
+    border: solid 1mm rgba(68, 44, 14, 0.719);
+    border-radius: 1.5mm;
+    /* border-image: url({assets}/border.png) 10 stretch; */
+    background: rgba(255, 255, 255, 0.726);
+    margin-bottom: 2mm;
+    /* overflow: clip; */
+    font-size: 4mm;
+    line-height: 1;
+}
+
+.charakter {
+    /* background-color: var(--HB_Color_Background); */
+    /* position: relative; */
+    /* padding: 0px; */
+    /* padding-top: 0px; */
+    /* margin-bottom: 0cm; */
+}
+
+h2 {
+    font-size: 5mm;
+    white-space: nowrap;
+    overflow: hidden;
+    font-family: Cinzel, serif;
+    line-height: 1em;
+    margin: 0;
+    padding-left: 1mm;
+    background-color: none;
+    color: var(--LT_Dunkelrot);
+}
+
+.desc {
+    font-size: 4mm;
+    font-style: italic;
+    margin-bottom: 0;
+    padding-left: 1mm;
+    display: table-cell;
+    overflow:hidden;
+    white-space: nowrap;
+}
+
+table {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    column-span: none;
+    border-collapse: collapse;
+    border-spacing: 0;
+    -webkit-column-span: none;
+    font-size: 4mm;
+    line-height: 1;
+}
+
+
+tr {
+    margin-bottom: -4mm;
+    max-width: 100%;
+}
+
+table.fertigkeiten {
+    table-layout: fixed;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+table.fertigkeiten td.pw {
+    width: 5mm;
+    border-right: 0.5mm solid rgba(68, 44, 14, 0.719);
+    text-align: center;
+}
+
+tr.freiefertigkeiten td {
+    border-top: 0.5mm solid rgba(68, 44, 14, 0.719);
+    padding-top: 0.2mm;
+    padding-bottom: 0.8mm;
+}
+
+/* tr, td {
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+} */
+
+
+table.fertigkeiten td.fertigkeitname {
+    padding-left: 1mm;
+    /* max-width: calc(inherit-10mm); */
+}
+
+
+tr:nth-child(odd) {
+    background-color: rgba(255, 194, 144, 0.345);
+}
+
+table.werte {
+    font-size: 3.4mm;
+}
+table.werte td {
+    padding: 0.2mm;
+    text-align: center;
+}
+table.werte tr:nth-child(odd) {
+    background-color: transparent;
+    border-bottom: 1mm solid rgba(68, 44, 14, 0.719);
+}
+table.werte td:nth-child(odd) {
+    background-color: rgba(255, 194, 144, 0.345);
+}
+
+span.fertname {
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: clip;
+}
