@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'CharakterTab.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.2
+## Created by: Qt User Interface Compiler version 6.7.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -25,14 +25,14 @@ class Ui_Form(object):
         Form.resize(712, 568)
         self.verticalLayout = QVBoxLayout(Form)
         self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout.addItem(self.verticalSpacer)
+
         self.btnRemove = QPushButton(Form)
         self.btnRemove.setObjectName(u"btnRemove")
 
         self.verticalLayout.addWidget(self.btnRemove)
-
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.verticalLayout.addItem(self.verticalSpacer)
 
 
         self.retranslateUi(Form)

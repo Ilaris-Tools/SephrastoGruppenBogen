@@ -34,6 +34,7 @@ class CustomTreeWidgetItem(QtWidgets.QWidget):
                 child.setSelected(False)
             elif state == 2:
                 self.memory[i] = child.isSelected()
+                # should be removed since we check avoid ciruclar events before
                 self.parent().blockSignals(True)
                 child.setSelected(True)
                 self.parent().blockSignals(False)
@@ -45,8 +46,8 @@ class CustomTreeWidgetItem(QtWidgets.QWidget):
         # Custom logic when child selection changes
         print("Child selection changed")
 
-class FilterableTreeWidget(QtWidgets.QWidget):
-    def __init__(self):
+class SelectionDialog(QtWidgets.QWidget):
+    def __init__(self, data):
         super().__init__()
 
         # Create the main layout
@@ -64,10 +65,20 @@ class FilterableTreeWidget(QtWidgets.QWidget):
         layout.addWidget(self.tree_widget)
 
         # Populate the tree widget with example data
-        self.populate_tree()
+        self.populate_tree(data)
+
+        # create buttons
+        btnLayout = QtWidgets.QHBoxLayout()
+        self.btnSave = QtWidgets.QPushButton("Speichern")
+        self.btnCancel = QtWidgets.QPushButton("Abbrechen")
+        btnLayout.addWidget(self.btnSave)
+        btnLayout.addWidget(self.btnCancel)
+        layout.addLayout(btnLayout)
 
         # Connect the search bar to the filter
         self.search_bar.textChanged.connect(self.filter_tree)
+        self.btnSave.clicked.connect(self.save)
+        self.btnCancel.clicked.connect(self.cancle)
 
         # Connect the itemSelectionChanged signal to a custom slot
         self.tree_widget.itemSelectionChanged.connect(self.handle_item_selection_changed)
@@ -75,13 +86,7 @@ class FilterableTreeWidget(QtWidgets.QWidget):
         # Store the previous selection
         self.previous_selection = set()
 
-    def populate_tree(self):
-        categories = {
-            "Fruits": ["Apple", "Banana", "Cherry"],
-            "Vegetables": ["Carrot", "Lettuce", "Tomato"],
-            "Dairy": ["Milk", "Cheese", "Yogurt"]
-        }
-
+    def populate_tree(self, categories):
         for category, items in categories.items():
             category_item = QtWidgets.QTreeWidgetItem(self.tree_widget)
             category_item.setFlags(category_item.flags() | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsAutoTristate)
@@ -129,10 +134,43 @@ class FilterableTreeWidget(QtWidgets.QWidget):
                     # custom_widget.toggle.setCheckState(QtCore.Qt.PartiallyChecked)
                     # custom_widget.handle_child_selection_changed()
         self.previous_selection = current_selection
+    
+    def selectItems(self, items):
+        for i in range(self.tree_widget.topLevelItemCount()):
+            top_item = self.tree_widget.topLevelItem(i)
+            for j in range(top_item.childCount()):
+                item = top_item.child(j)
+                if item.text(0) in items:
+                    item.setSelected(True)
+
+    @property
+    def selectedItems(self):
+        items = []
+        for i in range(self.tree_widget.topLevelItemCount()):
+            top_item = self.tree_widget.topLevelItem(i)
+            for j in range(top_item.childCount()):
+                if top_item.child(j).isSelected():
+                    item = top_item.child(j)
+                    items.append(item.text(0))
+        return items
+
+    def save(self):
+        """overwrite this"""
+        print("Save clicked")
+    
+    def cancle(self):
+        """overwrite this"""
+        # print("Cancel clicked")
+        return
 
 # Example usage
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
-    widget = FilterableTreeWidget()
+    data = {
+        "Fruits": ["Apple", "Banana", "Cherry"],
+        "Vegetables": ["Carrot", "Lettuce", "Tomato"],
+        "Dairy": ["Milk", "Cheese", "Yogurt"]
+    }
+    widget = SelectionDialog(data)
     widget.show()
     app.exec()

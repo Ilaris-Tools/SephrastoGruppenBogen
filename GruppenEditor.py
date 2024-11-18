@@ -3,11 +3,15 @@ from PySide6.QtWidgets import QLabel as QL
 from QtUtils.ProgressDialogExt import ProgressDialogExt
 from Serialization import Serialization
 from QtUtils.WebEngineViewPlus import WebEngineViewPlus
+from QtUtils.RichTextButton import RichTextPushButton, RichTextToolButton
 from PySide6.QtGui import QPageLayout, QPageSize
 import os
 import PdfSerializer
-
+from collections import defaultdict
 from EinstellungenWrapper import EinstellungenWrapper
+from .UI.SelectionDialog import SelectionDialog
+# from Core.Fertigkeit import UeberFertigkeit, Fertigkeit
+from Core.Talent import Talent
 
 from .UI.MainForm import Ui_Form as MainForm
 from .UI.CharakterTab import Ui_Form as CharakterTab
@@ -35,6 +39,12 @@ class MyProgressDLG(ProgressDialogExt):
         self.hide()
         self.deleteLater()
 
+class IconBtn(RichTextToolButton):
+    def __init__(self, icon, text, parent=None):
+        super().__init__(parent)
+        self.setText(f"<span style='{Wolke.FontAwesomeCSS}'>{icon}</span>&nbsp;&nbsp;{text}")
+    
+
 class GruppenEditor(object):
     """Main UI class contains all the logic for the GruppenEditor Window."""
 
@@ -48,15 +58,27 @@ class GruppenEditor(object):
         self.ui = MainForm()  # ui from qt designer
         self.ui.setupUi(self.root)  # setup generated from qt designer
         self.setupUi()  # our setup in this wrapper
+        self.updateUI()
+        self.selectionDialog = None
         Wolke.DB = Datenbank.Datenbank()
 
     def setupUi(self):
         """custom setup to add logic to ui, also called from init."""
         # buttons and actions
+        self.ui.btnOpen = IconBtn("\uf07c", "Öffnen")
+        self.ui.btnSave = IconBtn("\uf0c7", "Speichern")
+        self.ui.btnExport = IconBtn("\uf1c1", "Exportieren")
+        self.ui.bottomBar.layout().addWidget(self.ui.btnOpen)
+        self.ui.bottomBar.layout().addWidget(self.ui.btnSave)
+        self.ui.bottomBar.layout().addWidget(self.ui.btnExport)
+        # self.ui.btnSave.setText("<span style='" + Wolke.FontAwesomeCSS + f"'>\uf1c1</span>&nbsp;&nbsp;Speichern")
         self.ui.btnSave.clicked.connect(self.save)
         self.ui.btnOpen.clicked.connect(self.load)
         self.ui.btnExport.clicked.connect(self.export)
         self.ui.btnLoadChar.clicked.connect(self.addCharakter)
+        self.ui.btnEditFertigkeiten.clicked.connect(self.openFertigkeitenDialog)
+        self.ui.btnEditVorteile.clicked.connect(self.openVorteileDialog)
+        self.ui.btnEditZauber.clicked.connect(self.openZauberDialog)
         # self.ui.tabs.changeEvent = self.tabChanged
         self.ui.tabs.tabBar().tabBarClicked.connect(self.tabChanged)
         # edit fields
@@ -64,10 +86,16 @@ class GruppenEditor(object):
         self.ui.sbColumns.valueChanged.connect(lambda x: setattr(self.gruppe, "columns", x))
         self.ui.cbFreieFertigkeiten.stateChanged.connect(lambda x: setattr(self.gruppe, "freiefertigkeiten", x==2))
         self.ui.cbBeschreibung.stateChanged.connect(lambda x: setattr(self.gruppe, "beschreibung", x==2))
+        self.ui.ddFertigkeiten.currentTextChanged.connect(lambda x: setattr(self.gruppe, "fertigkeitenStrategie", x))
+        self.ui.ddVorteile.currentTextChanged.connect(lambda x: setattr(self.gruppe, "vorteileStrategie", x))
+        self.ui.ddZauber.currentTextChanged.connect(lambda x: setattr(self.gruppe, "zauberStrategie", x))
         # for fName, wName in self.gruppe.fieldMap.items():
         #     field = getattr(self.ui, wName)
         #     field.textChanged.connect(lambda: setattr(self.gruppe, fName, field.text()))
         # self.ui.leName.textChanged.connect(lambda: self.gruppe.name = self.ui.leName.text())
+        
+        # make tab titles headings
+        # self.ui.tabs.setStyleSheet('QTabBar { font-weight: bold; font-size: ' + str(Wolke.FontHeadingSizeL1) + 'pt; font-family: \"' + Wolke.Settings["FontHeading"] + '\"; }')
     
     def updateUI(self, renderChars=False):
         """Update the UI."""
@@ -91,7 +119,10 @@ class GruppenEditor(object):
         self.ui.cbAttribute.setChecked(self.gruppe.attribute)
         self.ui.cbEigenheiten.setChecked(self.gruppe.eigenheiten)
         self.ui.cbKampfwerte.setChecked(self.gruppe.kampfwerte)
-        # self.ui.cbEp
+        # self.ui.cbEp.setChecked(self.gruppe.ep)
+        self.ui.ddFertigkeiten.setCurrentText(self.gruppe.fertigkeitenStrategie)
+        self.ui.ddVorteile.setCurrentText(self.gruppe.vorteile.capitalize())
+        self.ui.ddZauber.setCurrentText(self.gruppe.zauber.capitalize())
 
     
     def tabChanged(self, tabNumber):
@@ -203,11 +234,12 @@ class GruppenEditor(object):
             # self.savepath = newPath  # change here or after serialization or success?
         else:
             fname = self.savepath
-        gruppe = {}
+        # gruppe = {}
+        gruppe = self.gruppe.toDict()
         if not self.ui.leName.text():
             QtWidgets.QMessageBox.warning(self.root, "Fehler", "Bitte Gruppenname eingeben.")
             return
-        gruppe["name"] = self.ui.leName.text()
+        # gruppe["name"] = self.ui.leName.text()
         gruppe["charaktere"] = []
         for char in self.charaktere:
             ser = Serialization.getSerializer(".json", 'Charakter')
@@ -243,12 +275,14 @@ class GruppenEditor(object):
         with open(fname, "r") as f:
             gruppe = json.load(f)
         dlg.setValue(10, True)
-        self.ui.leName.setText(gruppe["name"])
+        # self.ui.leName.setText(gruppe["name"])  # part of updateUI
+        chars = gruppe.pop("charaktere")
+        self.gruppe = Gruppe.fromDict(gruppe)
         # TODO: ask if unsaved changes.. clear or respawn GruppenEditor?
         self.charaktere = []  # make sure allfields are updated and title etc..
-        count = len(gruppe["charaktere"])
+        count = len(chars)
         step = 80 // count
-        for charIdx, charDict in enumerate(gruppe["charaktere"]):
+        for charIdx, charDict in enumerate(chars):
             dlg.setLabelText(f"Lade Charakter {charIdx+1} von {count}")
             # preload hausregeln 
             storedHausregeln = gruppe.get("hausregeln", "Keine")
@@ -326,3 +360,85 @@ class GruppenEditor(object):
         path = PdfSerializer.convertHtmlToPdf(html, htmlPath, pl, out_file=fname)
         dlg.tick(100, "Fertig gespeichert")
         dlg.stop()
+    
+    def getFertigkeitenDict(self):
+        self.loadDB("Keine")  # TODO: fix me
+        fertigkeiten = Wolke.DB.fertigkeiten
+        data = defaultdict(list)
+        for name, f in fertigkeiten.items():
+            if f.kampffertigkeit:
+                data[f.displayName.replace("profan", "kampf")].append(f.name)
+            else:
+                data[f.displayName].append(f.name)
+        return data
+    
+    def getVorteileDict(self):
+        self.loadDB("Keine") 
+        vorteile = Wolke.DB.vorteile
+        db = Wolke.DB
+        kategorien = list(Wolke.DB.einstellungen["Vorteile: Kategorien"].wert.keys())
+        data = defaultdict(list)
+        for name, v in vorteile.items():
+            k = kategorien[v.kategorie]
+            print(k)
+            # k = Wolke.DB.vorteilkategorien[v.kategorie]
+            print(k)
+            data[k].append(v.name)
+        return data
+
+    def geZauberDict(self):
+        self.loadDB("Keine")
+        zauber = Wolke.DB.zauber
+        return []
+    
+    def openFertigkeitenDialog(self):
+        """Open the Fertigkeiten dialog."""
+        # widget = QtWidgets.QWidget()
+        data = self.getFertigkeitenDict()
+        self.selectionDialog = SelectionDialog(data)
+        self.selectionDialog.save = self.saveFertigkeiten
+        self.selectionDialog.setWindowTitle("Fertigkeiten auswählen")
+        self.selectionDialog.selectItems(self.gruppe.fertigkeiten)
+        self.selectionDialog.show()
+    
+    def openVorteileDialog(self):
+        """Open the Vorteile dialog."""
+        # widget = QtWidgets.QWidget()
+        data = self.getVorteileDict()
+        self.selectionDialog = SelectionDialog(data)
+        self.selectionDialog.save = self.saveVorteile
+        self.selectionDialog.setWindowTitle("Vorteile auswählen")
+        self.selectionDialog.selectItems(self.gruppe.vorteile)
+        self.selectionDialog.show()
+    
+    def openZauberDialog(self):
+        """Open the Zauber dialog."""
+        # widget = QtWidgets.QWidget()
+        data = self.geZauberDict()
+        self.selectionDialog = SelectionDialog(data)
+        self.selectionDialog.save = self.saveZauber
+        self.selectionDialog.setWindowTitle("Zauber auswählen")
+        self.selectionDialog.selectItems(self.gruppe.zauber)
+        self.selectionDialog.show()
+
+    def saveFertigkeiten(self):
+        """Save the selected Fertigkeiten."""
+        self.gruppe.fertigkeiten = self.selectionDialog.selectedItems.copy()
+        print("Fertigkeiten updated.")
+        self.updateUI()
+        self.selectionDialog.close()
+    
+    def saveVorteile(self):
+        """Save the selected Vorteile."""
+        self.gruppe.vorteile = self.selectionDialog.selectedItems.copy()
+        # self.ui.bt
+        print("Vorteile updated.")
+        self.updateUI()
+        self.selectionDialog.close()
+    
+    def saveZauber(self):    
+        """Save the selected Zauber."""
+        self.gruppe.zauber = self.selectionDialog.selectedItems.copy()
+        print("Zauber updated.")
+        self.updateUI()
+        self.selectionDialog.close()

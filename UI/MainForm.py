@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'MainForm.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.2
+## Created by: Qt User Interface Compiler version 6.7.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -30,8 +30,7 @@ class Ui_Form(object):
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.frame = QFrame(Form)
         self.frame.setObjectName(u"frame")
-        self.frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.frame.setFrameShape(QFrame.NoFrame)
         self.verticalLayout = QVBoxLayout(self.frame)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.tabs = QTabWidget(self.frame)
@@ -42,8 +41,7 @@ class Ui_Form(object):
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.frame_4 = QFrame(self.tabGruppe)
         self.frame_4.setObjectName(u"frame_4")
-        self.frame_4.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame_4.setFrameShadow(QFrame.Shadow.Raised)
+        self.frame_4.setFrameShape(QFrame.NoFrame)
         self.verticalLayout_3 = QVBoxLayout(self.frame_4)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.groupBox = QGroupBox(self.frame_4)
@@ -97,8 +95,7 @@ class Ui_Form(object):
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
         self.frame_5 = QFrame(self.groupBox_2)
         self.frame_5.setObjectName(u"frame_5")
-        self.frame_5.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame_5.setFrameShadow(QFrame.Shadow.Raised)
+        self.frame_5.setFrameShape(QFrame.NoFrame)
         self.horizontalLayout_5 = QHBoxLayout(self.frame_5)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.btnEp = QCheckBox(self.frame_5)
@@ -142,8 +139,7 @@ class Ui_Form(object):
 
         self.frame_6 = QFrame(self.groupBox_2)
         self.frame_6.setObjectName(u"frame_6")
-        self.frame_6.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame_6.setFrameShadow(QFrame.Shadow.Raised)
+        self.frame_6.setFrameShape(QFrame.NoFrame)
         self.gridLayout = QGridLayout(self.frame_6)
         self.gridLayout.setObjectName(u"gridLayout")
         self.ddFertigkeiten = QComboBox(self.frame_6)
@@ -180,14 +176,15 @@ class Ui_Form(object):
 
         self.gridLayout.addWidget(self.label_4, 2, 0, 1, 1)
 
-        self.label_3 = QLabel(self.frame_6)
-        self.label_3.setObjectName(u"label_3")
-
-        self.gridLayout.addWidget(self.label_3, 0, 0, 2, 2)
-
         self.btnEditVorteile = QPushButton(self.frame_6)
         self.btnEditVorteile.setObjectName(u"btnEditVorteile")
-        icon = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.FolderNew))
+        icon = QIcon()
+        iconThemeName = u"QIcon::ThemeIcon::FolderNew"
+        if QIcon.hasThemeIcon(iconThemeName):
+            icon = QIcon.fromTheme(iconThemeName)
+        else:
+            icon.addFile(u".", QSize(), QIcon.Normal, QIcon.Off)
+
         self.btnEditVorteile.setIcon(icon)
 
         self.gridLayout.addWidget(self.btnEditVorteile, 1, 2, 1, 1)
@@ -201,6 +198,11 @@ class Ui_Form(object):
         self.btnEditZauber.setObjectName(u"btnEditZauber")
 
         self.gridLayout.addWidget(self.btnEditZauber, 3, 2, 1, 1)
+
+        self.label_3 = QLabel(self.frame_6)
+        self.label_3.setObjectName(u"label_3")
+
+        self.gridLayout.addWidget(self.label_3, 0, 0, 2, 1)
 
 
         self.verticalLayout_4.addWidget(self.frame_6)
@@ -222,11 +224,10 @@ class Ui_Form(object):
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.frame_3 = QFrame(self.tabNeu)
         self.frame_3.setObjectName(u"frame_3")
-        self.frame_3.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame_3.setFrameShadow(QFrame.Shadow.Raised)
+        self.frame_3.setFrameShape(QFrame.NoFrame)
         self.horizontalLayout_3 = QHBoxLayout(self.frame_3)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.horizontalLayout_3.addItem(self.horizontalSpacer_2)
 
@@ -239,65 +240,61 @@ class Ui_Form(object):
 
         self.horizontalLayout_3.addWidget(self.btnLoadChar)
 
-        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.horizontalLayout_3.addItem(self.horizontalSpacer_3)
 
 
         self.verticalLayout_2.addWidget(self.frame_3)
 
-        icon1 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ContactNew))
+        icon1 = QIcon()
+        iconThemeName = u"QIcon::ThemeIcon::ContactNew"
+        if QIcon.hasThemeIcon(iconThemeName):
+            icon1 = QIcon.fromTheme(iconThemeName)
+        else:
+            icon1.addFile(u".", QSize(), QIcon.Normal, QIcon.Off)
+
         self.tabs.addTab(self.tabNeu, icon1, "")
 
         self.verticalLayout.addWidget(self.tabs)
 
-        self.frame_2 = QFrame(self.frame)
-        self.frame_2.setObjectName(u"frame_2")
-        self.frame_2.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame_2.setFrameShadow(QFrame.Shadow.Raised)
-        self.horizontalLayout_2 = QHBoxLayout(self.frame_2)
+        self.bottomBar = QFrame(self.frame)
+        self.bottomBar.setObjectName(u"bottomBar")
+        self.bottomBar.setFrameShape(QFrame.NoFrame)
+        self.horizontalLayout_2 = QHBoxLayout(self.bottomBar)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.btnReloadAll = QPushButton(self.frame_2)
+        self.btnReloadAll = QPushButton(self.bottomBar)
         self.btnReloadAll.setObjectName(u"btnReloadAll")
-        icon2 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.ViewRefresh))
+        icon2 = QIcon()
+        iconThemeName = u"QIcon::ThemeIcon::ViewRefresh"
+        if QIcon.hasThemeIcon(iconThemeName):
+            icon2 = QIcon.fromTheme(iconThemeName)
+        else:
+            icon2.addFile(u".", QSize(), QIcon.Normal, QIcon.Off)
+
         self.btnReloadAll.setIcon(icon2)
 
         self.horizontalLayout_2.addWidget(self.btnReloadAll)
 
-        self.btnRemoveCurrentChar = QPushButton(self.frame_2)
+        self.btnRemoveCurrentChar = QPushButton(self.bottomBar)
         self.btnRemoveCurrentChar.setObjectName(u"btnRemoveCurrentChar")
-        icon3 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.EditDelete))
+        icon3 = QIcon()
+        iconThemeName = u"QIcon::ThemeIcon::EditDelete"
+        if QIcon.hasThemeIcon(iconThemeName):
+            icon3 = QIcon.fromTheme(iconThemeName)
+        else:
+            icon3.addFile(u".", QSize(), QIcon.Normal, QIcon.Off)
+
         self.btnRemoveCurrentChar.setIcon(icon3)
 
         self.horizontalLayout_2.addWidget(self.btnRemoveCurrentChar)
 
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_2.addItem(self.horizontalSpacer)
 
-        self.btnOpen = QPushButton(self.frame_2)
-        self.btnOpen.setObjectName(u"btnOpen")
-        icon4 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentOpen))
-        self.btnOpen.setIcon(icon4)
 
-        self.horizontalLayout_2.addWidget(self.btnOpen)
-
-        self.btnSave = QPushButton(self.frame_2)
-        self.btnSave.setObjectName(u"btnSave")
-        icon5 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentSave))
-        self.btnSave.setIcon(icon5)
-
-        self.horizontalLayout_2.addWidget(self.btnSave)
-
-        self.btnExport = QPushButton(self.frame_2)
-        self.btnExport.setObjectName(u"btnExport")
-        icon6 = QIcon(QIcon.fromTheme(QIcon.ThemeIcon.DocumentPrint))
-        self.btnExport.setIcon(icon6)
-
-        self.horizontalLayout_2.addWidget(self.btnExport)
-
-
-        self.verticalLayout.addWidget(self.frame_2)
+        self.verticalLayout.addWidget(self.bottomBar)
 
 
         self.horizontalLayout.addWidget(self.frame)
@@ -343,17 +340,14 @@ class Ui_Form(object):
         self.ddZauber.setItemText(2, QCoreApplication.translate("Form", u"Benutzerdefiniert", None))
 
         self.label_4.setText(QCoreApplication.translate("Form", u"Fertigkeiten", None))
-        self.label_3.setText(QCoreApplication.translate("Form", u"Vorteile", None))
         self.btnEditVorteile.setText("")
         self.btnEditFertigkeiten.setText("")
         self.btnEditZauber.setText("")
+        self.label_3.setText(QCoreApplication.translate("Form", u"Vorteile", None))
         self.tabs.setTabText(self.tabs.indexOf(self.tabGruppe), QCoreApplication.translate("Form", u"Gruppe", None))
         self.btnLoadChar.setText(QCoreApplication.translate("Form", u"Charakter laden", None))
         self.tabs.setTabText(self.tabs.indexOf(self.tabNeu), QCoreApplication.translate("Form", u"Charakter hinzuf\u00fcgen", None))
         self.btnReloadAll.setText(QCoreApplication.translate("Form", u"Alle aktualisieren", None))
         self.btnRemoveCurrentChar.setText(QCoreApplication.translate("Form", u"Charakter entfernen", None))
-        self.btnOpen.setText(QCoreApplication.translate("Form", u"\u00d6ffnen", None))
-        self.btnSave.setText(QCoreApplication.translate("Form", u"Speichern", None))
-        self.btnExport.setText(QCoreApplication.translate("Form", u"Export", None))
     # retranslateUi
 
